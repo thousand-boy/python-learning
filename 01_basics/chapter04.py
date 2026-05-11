@@ -59,7 +59,6 @@ def add_numbers(a,b):
     print(a+b)
 
 add_numbers(3,5)
-print(a+b)
 
 add_numbers(3,5)
 
