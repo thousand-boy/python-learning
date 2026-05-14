@@ -22,8 +22,8 @@ Python基礎の学習記録リポジトリです。
 | 2026-05-12 | Google ColabからVS Codeへの移行・GitHub使用方法習得 | - |
 | 2026-05-12 | Python基礎（変数・データ型・文字列・型変換） | chapter01_03.py |
 | 2026-05-13 | リスト・辞書・関数（def・return） | chapter04.py |
-| 2026-05-13 | 外部ライブラリ・QRコード生成（qrcode） | chapter05.py |
-
+| 2026-05-14 | 外部ライブラリ・QRコード生成（qrcode） | chapter05.py |
+| 2026-05-14 | 条件分岐・繰り返し（if文、比較演算子、elif、else、for文） | chapter06.py |
 ---
 
 ## 学習内容サマリー
