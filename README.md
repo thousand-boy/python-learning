@@ -23,6 +23,7 @@ Python基礎の学習記録リポジトリです。
 | 2026-05-13 | リスト・辞書・関数（def・return） | chapter04.py |
 | 2026-05-14 | 外部ライブラリ・QRコード生成（qrcode） | chapter05.py |
 | 2026-05-14 | 条件分岐・繰り返し（if文、比較演算子、elif、else、for文） | chapter06.py |
+| 2026-05-15・16 | PDF操作自動化（PyMuPDF）、画像処理自動化（Pillow） | chapter07.py |
 
 ---
 
@@ -53,6 +54,19 @@ Python基礎の学習記録リポジトリです。
 - `for` ループによるリストの反復処理
 - `range()` 関数（開始・終了・ステップ指定）
 - ネストされた `for` ループ（九九の計算表）
+
+### chapter07.py（第7章）
+- `PyMuPDF` によるPDF操作自動化
+  - テキスト抽出（`get_text()`）
+  - ページ抽出・保存（`select()`）
+  - ページ回転（`set_rotation()`）
+  - PDFの結合（`insert_file()`）
+  - ページ削除（`delete_page()`）
+- `Pillow` による画像処理自動化
+  - 画像サイズ取得（`img.size`）
+  - リサイズ（`resize()`）
+  - 回転（`rotate()`）
+  - グレースケール変換（`convert("L")`）
 
 ---
 
@@ -104,6 +118,23 @@ for i in range(1, 10, 2):   # 1,3,5,7,9（ステップ2）
 for i in range(1, 10):
     for j in range(1, 10):
         print(f"{i}×{j}={i*j}")
+
+# PDF操作（第7章）
+import pymupdf
+doc = pymupdf.open("error.pdf")
+text = doc[0].get_text()     # テキスト抽出
+doc.select([0])              # 1ページ目のみ抽出
+doc[0].set_rotation(90)      # ページ回転
+doc_a.insert_file(doc_b)     # PDF結合
+doc.delete_page(2)           # ページ削除
+
+# 画像処理（第7章）
+from PIL import Image
+img = Image.open("sample.jpg")
+print(img.size)              # (幅, 高さ) を取得
+img.resize((width, height))  # リサイズ
+img.rotate(90)               # 回転
+img.convert("L")             # グレースケール変換
 ```
 
 ---
@@ -129,7 +160,8 @@ python-learning/
 │   ├── chapter01_03.py   # 第1〜3章
 │   ├── chapter04.py      # 第4章
 │   ├── chapter05.py      # 第5章
-│   └── chapter06.py      # 第6章
+│   ├── chapter06.py      # 第6章
+│   └── chapter07.py      # 第7章
 └── notes/
     └── 2026-05-12.md
 ```
