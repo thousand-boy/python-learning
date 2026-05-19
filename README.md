@@ -25,6 +25,7 @@ Python基礎の学習記録リポジトリです。
 | 2026-05-14 | 条件分岐・繰り返し（if文、比較演算子、elif、else、for文） | chapter06.py |
 | 2026-05-15・16 | PDF操作自動化（PyMuPDF）、画像処理自動化（Pillow） | chapter07.py |
 | 2026-05-18 | Webスクレイピング（requests・BeautifulSoup） | chapter08.py |
+| 2026-05-19 | 機械学習（scikit-learn・NumPy・手書き数字認識） | chapter09.py |
 
 ---
 
@@ -75,6 +76,20 @@ Python基礎の学習記録リポジトリです。
 - `BeautifulSoup` によるHTMLパース（`html.parser`）
 - タグ単位でのデータ抽出（`soup.find()`・`.text`）
   - `h1` / `h2` / `p` タグのテキスト取得
+
+  ### chapter09.py（第9章）
+- `scikit-learn` による教師あり学習の体験
+  - `datasets.load_digits()`：手書き数字データセットの読み込み
+  - データの形状確認（`digits.data.shape` / `digits.target` / `digits.images`）
+  - `matplotlib.pyplot` による画像表示（`plt.imshow()`）
+  - 白黒反転処理（`16 - digits.images`）
+  - `sklearn.svm.SVC` による分類モデルの作成
+  - `model.fit()` で学習、`model.predict()` で予測
+- `NumPy` を用いた画像データの前処理
+  - `np.asarray()` で画像を数値配列に変換
+  - 0〜16の範囲への正規化（`* 17 // 256`）
+  - `flatten()` による2次元→1次元変換
+- `Pillow` との連携：自作画像の読み込み・グレースケール化・8×8リサイズ
 
 ---
 
@@ -272,6 +287,49 @@ print(soup.find("h2").text)  # h2タグのテキスト取得
 print(soup.find("p").text)   # pタグのテキスト取得
 ```
 
+### 第9章：機械学習（手書き数字認識）
+ 
+```python
+# データセットの読み込み
+from sklearn import datasets
+digits = datasets.load_digits()
+ 
+print(digits.data.shape)   # (1797, 64)：1797枚×64画素
+print(digits.target[:5])   # 先頭5枚の正解ラベル
+print(digits.images[0])    # 1枚目の8×8画像データ
+ 
+# 画像表示
+import matplotlib.pyplot as plt
+plt.imshow(digits.images[0], cmap="gray")
+plt.show()
+ 
+# 白黒反転（学習データに合わせる）
+inverted_imgs = 16 - digits.images
+plt.imshow(inverted_imgs[0], cmap="gray")
+plt.show()
+ 
+# モデルの学習
+import sklearn.svm
+model = sklearn.svm.SVC()
+model.fit(16 - digits.data, digits.target)  # 反転データで学習
+ 
+# 新しい画像で予測（前処理）
+from PIL import Image
+import numpy as np
+ 
+image = Image.open("0.jpg")
+grayscale_img = image.convert("L")          # グレースケール化
+resize_img = grayscale_img.resize((8, 8))   # 8×8にリサイズ
+ 
+num_img = np.asarray(resize_img, dtype=int) # 数値配列に変換
+normalized_img = num_img * 17 // 256        # 0〜16に正規化
+flattened_img = normalized_img.flatten()    # 1×64に変換
+ 
+# 予測
+pred = model.predict([flattened_img])
+print(pred)  # → [0]（予測結果）
+```
+
 ---
 
 ## GitHub学習記録（2026-05-12）
@@ -297,9 +355,16 @@ python-learning/
 │   ├── chapter05.py      # 第5章
 │   ├── chapter06.py      # 第6章
 │   ├── chapter07.py      # 第7章
-│   └── chapter08.py      # 第8章
+│   ├── chapter08.py      # 第8章
+│   └── chapter09.py      # 第9章
 └── notes/
-    └── 2026-05-12.md
+    ├── 2026-05-12.md     # 環境構築・Python基礎
+    ├── 2026-05-13.md     # リスト・辞書・関数
+    ├── 2026-05-14.md     # 外部ライブラリ・条件分岐・繰り返し
+    ├── 2026-05-15_16.md  # PDF操作・画像処理
+    ├── 2026-05-18.md     # Webスクレイピング
+    ├── 2026-05-19.md     # 機械学習
+    └── 2026-05-20.md
 ```
 
 ---
