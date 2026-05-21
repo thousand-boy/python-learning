@@ -91,6 +91,20 @@ Python基礎の学習記録リポジトリです。
   - `flatten()` による2次元→1次元変換
 - `Pillow` との連携：自作画像の読み込み・グレースケール化・8×8リサイズ
 
+### chapter10.py（第10章）
+- `Gradio` によるWebアプリUI作成
+  - `gr.Interface()` でWebアプリを構築（`fn` / `inputs` / `outputs` / `flagging_mode`）
+  - `app.launch()` でWebブラウザ上にアプリを起動
+  - 入力フォーム（`gr.Textbox`）・出力表示（`gr.Image`）のカスタマイズ
+- `Stable Diffusion` による画像生成AI
+  - `diffusers` ライブラリから `StableDiffusionPipeline` をインポート
+  - `from_pretrained()` でモデルをロード（`CompVis/stable-diffusion-v1-4`）
+  - `.to("cuda")` でGPU上で動作させる設定
+  - テキストプロンプトから画像を生成（`pipeline(prompt).images[0]`）
+  - 生成画像をファイルに保存（`image.save()`）
+- GradioとStable Diffusionを組み合わせた**画像生成AIアプリ**の作成
+  - テキスト入力 → AI画像生成 → 結果表示までを1つのWebアプリに統合
+  - 関数のdocstring（処理内容・引数・戻り値の説明文）の書き方
 ---
 
 ## 学習した主な構文
@@ -330,6 +344,66 @@ pred = model.predict([flattened_img])
 print(pred)  # → [0]（予測結果）
 ```
 
+### 第10章：WebアプリUI・画像生成AI
+
+```python
+# Gradioであいさつアプリ
+import gradio as gr
+
+def greet(name):
+    return "こんにちは、" + name + "さん!"
+
+app = gr.Interface(
+    fn=greet,
+    inputs="text",
+    outputs="text",
+    flagging_mode="never"
+)
+app.launch()
+
+# Stable Diffusionで画像生成
+from diffusers import StableDiffusionPipeline
+import torch
+
+pipeline = StableDiffusionPipeline.from_pretrained(
+    "CompVis/stable-diffusion-v1-4"
+).to("cuda")                          # GPUで動作
+
+prompt = "cat by picasso"
+image = pipeline(prompt).images[0]    # プロンプトから画像生成
+image.save(f"{prompt}.png")           # ファイルに保存
+
+# GradioとStable Diffusionを組み合わせた画像生成AIアプリ
+from diffusers import StableDiffusionPipeline
+import gradio as gr
+import torch
+
+def generative_image(text):
+    """
+    引数で受け取ったテキストから画像を生成する関数
+
+    引数：
+        text(str型)：生成したい画像を指示するテキスト
+    戻り値：
+        image(画像データ)：生成した画像データ
+    """
+    pipeline = StableDiffusionPipeline.from_pretrained(
+        "CompVis/stable-diffusion-v1-4"
+    ).to("cuda")
+    image = pipeline(text).images[0]
+    return image
+
+app = gr.Interface(
+    fn=generative_image,
+    inputs=gr.Textbox(label="生成したい画像の特徴を入力"),
+    outputs=gr.Image(label="画像生成結果"),
+    title="画像生成アプリ",
+    description="テキストを入力して画像を生成します",
+    flagging_mode="never",
+)
+app.launch()
+```
+
 ---
 
 ## GitHub学習記録（2026-05-12）
@@ -356,7 +430,8 @@ python-learning/
 │   ├── chapter06.py      # 第6章
 │   ├── chapter07.py      # 第7章
 │   ├── chapter08.py      # 第8章
-│   └── chapter09.py      # 第9章
+│   ├── chapter09.py      # 第9章
+│   └── chapter10.py      # 第10章
 └── notes/
     ├── 2026-05-12.md     # 環境構築・Python基礎
     ├── 2026-05-13.md     # リスト・辞書・関数
@@ -364,7 +439,7 @@ python-learning/
     ├── 2026-05-15_16.md  # PDF操作・画像処理
     ├── 2026-05-18.md     # Webスクレイピング
     ├── 2026-05-19.md     # 機械学習
-    └── 2026-05-20.md
+    └── 2026-05-21.md　　　# WebアプリUI・画像生成AI
 ```
 
 ---
