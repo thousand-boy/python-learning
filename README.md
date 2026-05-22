@@ -26,6 +26,8 @@ Python基礎の学習記録リポジトリです。
 | 2026-05-15・16 | PDF操作自動化（PyMuPDF）、画像処理自動化（Pillow） | chapter07.py |
 | 2026-05-18 | Webスクレイピング（requests・BeautifulSoup） | chapter08.py |
 | 2026-05-19 | 機械学習（scikit-learn・NumPy・手書き数字認識） | chapter09.py |
+| 2026-05-20 | WebアプリUI作成（Gradio）・画像生成AI（Stable Diffusion）・画像生成AIアプリ作成 | chapter10.py |
+| 2026-05-22 | 音声文字起こし（Whisper）・生成AI連携（Gemini API）・会議自動要約アプリ作成 | chapter11.py |
 
 ---
 
@@ -105,6 +107,22 @@ Python基礎の学習記録リポジトリです。
 - GradioとStable Diffusionを組み合わせた**画像生成AIアプリ**の作成
   - テキスト入力 → AI画像生成 → 結果表示までを1つのWebアプリに統合
   - 関数のdocstring（処理内容・引数・戻り値の説明文）の書き方
+
+### chapter11.py（第11章）
+- `openai-whisper` による音声・動画の文字起こし
+  - `whisper.load_model()` でモデルを選択（`"medium"` など）
+  - `model.transcribe()` で動画ファイルを文字起こし
+  - `result["text"]` で文字起こし結果を取得
+- `Gemini API` による生成AI連携
+  - API・APIキーの概念理解（Application Programming Interfaceの略）
+  - `getpass()` でAPIキーを安全に入力（入力内容が画面に表示されない）
+  - `google-genai` ライブラリで Gemini に接続
+  - `genai.Client()` でクライアントを作成
+  - `client.models.generate_content()` でモデルを選択しプロンプトを送信
+  - `response.text` で回答テキストを取得
+- WhisperとGeminiを組み合わせた**会議自動要約アプリ**の作成
+  - 動画ファイルをアップロード → 文字起こし → Geminiで要約 の一連の流れを実装
+  - f文字列でプロンプトに文字起こし結果を埋め込む
 ---
 
 ## 学習した主な構文
@@ -404,6 +422,55 @@ app = gr.Interface(
 app.launch()
 ```
 
+### 第11章：音声文字起こし・生成AI連携
+
+```python
+# Whisperで文字起こし
+import whisper
+
+model = whisper.load_model("medium")       # モデルを読み込む
+result = model.transcribe("meeting.mp4")   # 動画を文字起こし
+print(result["text"])                      # テキストを表示
+
+# APIキーを安全に入力
+from getpass import getpass
+google_api_key = getpass("APIキーを入力して下さい:")
+
+# Gemini APIで質問
+from google import genai
+
+client = genai.Client(api_key=google_api_key)
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="Pythonでエラーが出たらGeminiに聞いても良い？簡潔に教えて",
+)
+print(response.text)  # 回答テキストを表示
+
+# WhisperとGeminiを組み合わせた会議自動要約アプリ
+import whisper
+from google import genai
+from getpass import getpass
+
+# 文字起こし
+model = whisper.load_model("medium")
+result = model.transcribe("meeting.mp4")
+transcribed_text = result["text"]
+print(transcribed_text)
+
+# Geminiで要約
+google_api_key = getpass("APIキーを入力して下さい:")
+client = genai.Client(api_key=google_api_key)
+
+prompt = f"次の会議内容を簡潔に要約して下さい:{transcribed_text}"
+
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents=prompt,
+)
+print("要約結果:")
+print(response.text)
+```
 ---
 
 ## GitHub学習記録（2026-05-12）
@@ -439,7 +506,8 @@ python-learning/
     ├── 2026-05-15_16.md  # PDF操作・画像処理
     ├── 2026-05-18.md     # Webスクレイピング
     ├── 2026-05-19.md     # 機械学習
-    └── 2026-05-21.md　　　# WebアプリUI・画像生成AI
+    ├── chapter10.py      # 第10章
+    └── chapter11.py      # 第11章
 ```
 
 ---
