@@ -498,7 +498,8 @@ python-learning/
 │   ├── chapter07.py      # 第7章
 │   ├── chapter08.py      # 第8章
 │   ├── chapter09.py      # 第9章
-│   └── chapter10.py      # 第10章
+│   ├── chapter10.py      # 第10章
+│   └── chapter11.py      # 第11章
 └── notes/
     ├── 2026-05-12.md     # 環境構築・Python基礎
     ├── 2026-05-13.md     # リスト・辞書・関数
@@ -506,8 +507,8 @@ python-learning/
     ├── 2026-05-15_16.md  # PDF操作・画像処理
     ├── 2026-05-18.md     # Webスクレイピング
     ├── 2026-05-19.md     # 機械学習
-    ├── chapter10.py      # 第10章
-    └── chapter11.py      # 第11章
+    ├── 2026-05-20.md      # WebアプリUI・画像生成AI
+    └── 2026-05-22.md      # 音声文字起こし・生成AI連携
 ```
 
 ---
